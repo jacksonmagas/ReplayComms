@@ -142,8 +142,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="UpgradeTest.rc">
+    <ResourceCompile Include="ReplayComms.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\..\..\AppData\Roaming\bakkesmod\bakkesmod\bakkesmodsdk\lib\pluginsdk.lib">
+      <Filter>Source Files</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

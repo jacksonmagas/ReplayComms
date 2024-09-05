@@ -2,16 +2,17 @@
 #include "ReplayComms.h"
 
 
-BAKKESMOD_PLUGIN(ReplayComms, "write a plugin description here", plugin_version, PLUGINTYPE_FREEPLAY)
+BAKKESMOD_PLUGIN(ReplayComms, "Replay Audio", plugin_version, PLUGINTYPE_FREEPLAY)
 
 std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 
 void ReplayComms::onLoad()
 {
 	_globalCvarManager = cvarManager;
+
 	//LOG("Plugin loaded!");
 	// !! Enable debug logging by setting DEBUG_LOG = true in logging.h !!
-	//DEBUGLOG("ReplayComms debug mode enabled");
+	DEBUGLOG("Loading");
 
 	// LOG and DEBUGLOG use fmt format strings https://fmt.dev/latest/index.html
 	//DEBUGLOG("1 = {}, 2 = {}, pi = {}, false != {}", "one", 2, 3.14, true);
@@ -46,4 +47,9 @@ void ReplayComms::onLoad()
 	//});
 	// You could also use std::bind here
 	//gameWrapper->HookEvent("Function TAGame.Ball_TA.Explode", std::bind(&ReplayComms::YourPluginMethod, this);
+}
+
+void ReplayComms::onUnload()
+{
+	DEBUGLOG("Unloading");
 }
