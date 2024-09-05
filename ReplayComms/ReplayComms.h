@@ -17,9 +17,12 @@ class ReplayComms: public BakkesMod::Plugin::BakkesModPlugin
 	//std::shared_ptr<bool> enabled;
 
 	//Boilerplate
-	void onLoad() override;
-	void onUnload() override; // Uncomment and implement if you need a unload method
+	virtual void onLoad() override;
+	virtual void onUnload() override; // Uncomment and implement if you need a unload method
+	void startRecording();
+	void stopRecording();
 
+	bool isRecording;
 public:
 	//void RenderSettings() override; // Uncomment if you wanna render your own tab in the settings menu
 	//void RenderWindow() override; // Uncomment if you want to render your own plugin window
