@@ -1,0 +1,13 @@
+prefix=${pcfiledir}/../..
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: PortAudio
+Description: Portable audio I/O
+Version: 19
+
+
+Libs: "-L${libdir}" -lportaudio
+Requires: 
+Cflags: "-I${includedir}" 

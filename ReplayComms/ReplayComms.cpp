@@ -14,6 +14,12 @@ void ReplayComms::onLoad()
 	// !! Enable debug logging by setting DEBUG_LOG = true in logging.h !!
 	DEBUGLOG("Loading");
 
+	// initialize portaudio
+	auto err = Pa_Initialize();
+	if (err != paNoError) {
+		DEBUGLOG("PortAudio error: {}", Pa_GetErrorText(err));
+	}
+
 	isRecording = false;
 	//every time an online game starts start recording audio
 	gameWrapper->HookEvent("Function TAGame.Team_TA.PostBeginPlay", std::bind(&ReplayComms::startRecording, this));
@@ -23,6 +29,10 @@ void ReplayComms::onLoad()
 
 void ReplayComms::onUnload()
 {
+	auto err = Pa_Terminate();
+	if (err != paNoError) {
+		DEBUGLOG("PortAudio error: {}", Pa_GetErrorText(err));
+	}
 	DEBUGLOG("Unloading");
 }
 
