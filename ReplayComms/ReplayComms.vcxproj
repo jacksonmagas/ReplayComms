@@ -117,6 +117,7 @@
     </ClCompile>
     <ClCompile Include="ReplayComms.cpp" />
     <ClCompile Include="GuiBase.cpp" />
+    <ClCompile Include="ThreadedFileWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="GuiBase.h" />
     <ClInclude Include="ReplayComms.h" />
+    <ClInclude Include="ThreadedFileWriter.hpp" />
     <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>

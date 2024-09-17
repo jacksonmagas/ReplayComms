@@ -14,7 +14,6 @@ class ReplayComms: public BakkesMod::Plugin::BakkesModPlugin
 	//,public SettingsWindowBase // Uncomment if you wanna render your own tab in the settings menu
 	//,public PluginWindowBase // Uncomment if you want to render your own plugin window
 {
-
 	//std::shared_ptr<bool> enabled;
 
 	//Boilerplate
@@ -24,6 +23,21 @@ class ReplayComms: public BakkesMod::Plugin::BakkesModPlugin
 	void stopRecording();
 
 	bool isRecording;
+	
+	int myMemberCallback(const void *input, 
+		void *output,
+		unsigned long frameCount,
+		const PaStreamCallbackTimeInfo* timeInfo,
+		PaStreamCallbackFlags statusFlags);
+	
+	static int myPaCallback(const void *input,
+		void *output,
+		unsigned long frameCount,
+		const PaStreamCallbackTimeInfo* timeInfo,
+		PaStreamCallbackFlags statusFlags,
+		void *userData ) {
+	 return ((ReplayComms*)userData)->myMemberCallback(input, output, frameCount, timeInfo, statusFlags);
+}
 public:
 	//void RenderSettings() override; // Uncomment if you wanna render your own tab in the settings menu
 	//void RenderWindow() override; // Uncomment if you want to render your own plugin window
