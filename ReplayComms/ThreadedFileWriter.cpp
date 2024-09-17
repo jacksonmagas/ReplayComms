@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "ThreadedFileWriter.hpp"
 
 void ThreadedFileWriter::write_worker()
@@ -40,8 +41,8 @@ ThreadedFileWriter::ThreadedFileWriter(std::filesystem::path path, size_t buffsi
 ThreadedFileWriter::~ThreadedFileWriter()
 {
 	// zero out the unused memory in the last buffer
-	std::byte* current_section_start = buffer.get() + buffsize * (buffer_write_idx - 1);
-	std::byte* current_section_end = current_section_start + buffsize;
+	char* current_section_start = reinterpret_cast<char*>(buffer.get()) + buffsize * (buffer_write_idx - 1);
+	char* current_section_end = current_section_start + buffsize;
 	std::fill(current_section_start + buffer_byte_idx, current_section_end , '\0');
 	// unlock last buffer for write thread
 	std::unique_lock lock(writing_mtx);
