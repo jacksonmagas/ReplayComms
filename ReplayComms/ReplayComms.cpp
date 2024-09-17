@@ -10,6 +10,8 @@ void ReplayComms::onLoad()
 {
 	_globalCvarManager = cvarManager;
 
+	audio_file_path = gameWrapper->GetBakkesModPath() / "replayComms";
+
 	//LOG("Plugin loaded!");
 	// !! Enable debug logging by setting DEBUG_LOG = true in logging.h !!
 	DEBUGLOG("Loading");
@@ -44,6 +46,10 @@ void ReplayComms::startRecording()
 	}
 	isRecording = true;
 	DEBUGLOG("Recording Audio");
+
+	numSamples = NextPowerOf2((unsigned)(SAMPLE_RATE * 0.5 * NUM_CHANNELS));
+	numBytes = numSamples * sizeof(SAMPLE);
+	ThreadedFileWriter fileWriter(audio_file_dir / filename, numSamples * sizeof(SAMPLE), 3);
 }
 
 

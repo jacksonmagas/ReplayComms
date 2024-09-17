@@ -22,7 +22,7 @@ void ThreadedFileWriter::write_worker()
 	}
 }
 
-ThreadedFileWriter::ThreadedFileWriter(std::string filename, size_t buffsize, size_t num_buffs) :
+ThreadedFileWriter::ThreadedFileWriter(std::filesystem::path path, size_t buffsize, size_t num_buffs) :
 	writing(true),
 	buffsize(buffsize),
 	num_buffs(num_buffs),
@@ -30,9 +30,9 @@ ThreadedFileWriter::ThreadedFileWriter(std::string filename, size_t buffsize, si
 	buffer_write_idx(0),
 	buffer_byte_idx(0),
 	mtxs(std::vector<std::mutex>(num_buffs)),
+	outfile(std::ofstream(path)),
 	buffer(std::make_unique<std::byte[]>(buffsize * num_buffs))
 {
-	outfile.open(filename);
 	mtxs[0].lock();
 	write_thread = std::thread(&ThreadedFileWriter::write_worker, this);
 }
@@ -40,8 +40,8 @@ ThreadedFileWriter::ThreadedFileWriter(std::string filename, size_t buffsize, si
 ThreadedFileWriter::~ThreadedFileWriter()
 {
 	// zero out the unused memory in the last buffer
-	char* current_section_start = buffer.get() + buffsize * (buffer_write_idx - 1);
-	char* current_section_end = current_section_start + buffsize;
+	std::byte* current_section_start = buffer.get() + buffsize * (buffer_write_idx - 1);
+	std::byte* current_section_end = current_section_start + buffsize;
 	std::fill(current_section_start + buffer_byte_idx, current_section_end , '\0');
 	// unlock last buffer for write thread
 	std::unique_lock lock(writing_mtx);

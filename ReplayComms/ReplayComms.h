@@ -7,6 +7,7 @@
 #include "portaudio.h"
 
 #include "version.h"
+#include <ThreadedFileWriter.hpp>
 constexpr auto plugin_version = stringify(VERSION_MAJOR) "." stringify(VERSION_MINOR) "." stringify(VERSION_PATCH) "." stringify(VERSION_BUILD);
 
 
@@ -21,6 +22,8 @@ class ReplayComms: public BakkesMod::Plugin::BakkesModPlugin
 	virtual void onUnload() override; // Uncomment and implement if you need a unload method
 	void startRecording();
 	void stopRecording();
+	std::unique_ptr<ThreadedFileWriter> fileWriter;
+	std::filesystem::path audio_file_dir;
 
 	bool isRecording;
 	

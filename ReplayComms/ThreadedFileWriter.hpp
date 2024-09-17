@@ -3,6 +3,7 @@
 #include <mutex>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 
 // This class provides an interface for writing data to a file in another thread
 // Data is provided to a ring buffer and then written to another thread
@@ -26,7 +27,7 @@ class ThreadedFileWriter {
 	//writes full buffers to outfile in second thread
 	void write_worker();
 public:
-	ThreadedFileWriter(std::string filename, size_t buffsize, size_t num_buffs);
+	ThreadedFileWriter(std::filesystem::path path, size_t buffsize, size_t num_buffs);
 	~ThreadedFileWriter();
 	
 	void write(std::byte* source, size_t num_bytes);
