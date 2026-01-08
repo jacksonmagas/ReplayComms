@@ -52,7 +52,15 @@ void ReplayComms::startRecording()
 	*/
 	size_t numBytes = 1024;
 	std::string filename("test");
-	fileWriter = std::make_unique<ThreadedFileWriter>(audio_file_dir / filename, numBytes, 3);
+	fileWriter = std::make_unique<ThreadedFileWriter>(1000, audio_file_dir / filename);
+	std::byte src[512];
+	const char* alph = "abcdefghijklmnopqrstuvwxyz ";
+	for (int i = 0; i < 512; ++i) {
+		src[i] = static_cast<std::byte>(alph[i % 27]);
+	}
+	auto leftoverData = fileWriter->addData({ src, 512 });
+	// TODO decide how to handle leftover data, just drop the data?
+	std::ignore = leftoverData;
 }
 
 
@@ -64,5 +72,5 @@ void ReplayComms::stopRecording()
 	}
 	isRecording = false;
 	DEBUGLOG("Ending Recording");
-	fileWriter = NULL;
+	fileWriter.reset();
 }

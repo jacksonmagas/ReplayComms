@@ -1,0 +1,96 @@
+#pragma once
+#include <span>
+#include <ranges>
+#include <cstddef>
+#include <utility>
+#include "ModularArithmetic.h"
+
+/**
+* Provides a linearized view of a fixed size container interpreted as a circular buffer from index start to index end.
+*/
+template<typename T>
+struct CircularSpan {
+
+	CircularSpan(std::span<T> buffer, std::size_t start, size_t end)
+	{
+		if (start <= end) {
+			// contiguous segment: [start, end)
+			_firstSection = buffer.subspan(start, end - start);
+			_secondSection = {};
+		}
+		else {
+			// wrapped segment: [start, size) and [0, end)
+			_firstSection = buffer.subspan(start);
+			_secondSection = buffer.subspan(0, end);
+		}
+	};
+	CircularSpan(std::span<T> left, std::span<T> right) : _firstSection(left), _secondSection(right) {};
+	static CircularSpan fromSize(std::span<T> buffer, std::size_t begin, size_t size) { return CircularSpan(buffer, begin, begin + size); };
+
+	std::size_t size() const { return _firstSection.size() + _secondSection.size(); }
+
+	template<typename U>
+	class iterator_base {
+	public:
+		using value_type = U;
+		using difference_type = std::ptrdiff_t;
+		using iterator_category = std::random_access_iterator_tag;
+		using pointer = U*;
+		using reference = U&;
+
+		iterator_base() : _index(0), _container(nullptr) {};
+		iterator_base(const CircularSpan<U>* container, size_t index = 0) : _index(index), _container(container) {};
+		iterator_base(const iterator_base&) = default;
+		iterator_base& operator=(const iterator_base&) = default;
+		iterator_base(iterator_base&&) = default;
+		iterator_base& operator=(iterator_base&&) = default;
+		~iterator_base() = default;
+
+		value_type operator*() const {
+			return _index < _container->_firstSection.size()
+				? _container->_firstSection[_index]
+				: _container->_secondSection[_index];
+		}
+
+		value_type operator[](const difference_type offset) const { return *((*this) + offset); }
+
+		iterator_base& operator++() { ++_index; return *this; }
+		iterator_base operator++(int) { iterator_base other = *this; ++(*this); return other; }
+		iterator_base& operator--() { --_index; return *this; }
+		iterator_base operator--(int) { iterator_base other = *this; --(*this); return other; }
+
+		iterator_base& operator+=(const difference_type increment) { _index += increment; return *this; }
+		iterator_base operator+(const difference_type increment) const { iterator_base other = *this; other += increment; return other; }
+		friend iterator_base operator+(const difference_type increment, const iterator_base rhs) { iterator_base other = rhs; other += increment; return other; }
+
+		iterator_base& operator-=(const difference_type decrement) { _index -= decrement; return *this; }
+		iterator_base operator-(const difference_type decrement) const { iterator_base other = *this; other -= decrement; return other; }
+		friend iterator_base operator-(const difference_type decrement, const iterator_base rhs) { iterator_base other = rhs; other -= decrement; return other; }
+		friend difference_type operator-(const iterator_base& lhs, const iterator_base& rhs) { return static_cast<difference_type>(lhs._index) - rhs._index; }
+		
+		auto operator<=>(const iterator_base&) const = default;
+	private:
+		size_t _index;
+		CircularSpan<U>* _container;
+	};
+
+	using iterator = iterator_base<T>;
+	using const_iterator = iterator_base<const T>;
+
+	static_assert(std::random_access_iterator<iterator>);
+
+	iterator begin() { return iterator(this); }
+	iterator end() { return iterator(this, size()); }
+
+	const_iterator begin() const { return const_iterator(this); }
+	const_iterator end() const { return const_iterator(this, size()); }
+
+	std::span<T> _firstSection;
+	std::span<T> _secondSection;
+};
+
+template<typename T>
+constexpr bool std::ranges::enable_borrowed_range<CircularSpan<T>> = true;
+
+template<typename T>
+constexpr bool std::ranges::enable_view<CircularSpan<T>> = true;

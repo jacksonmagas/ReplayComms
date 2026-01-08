@@ -20,12 +20,9 @@ class ReplayComms: public BakkesMod::Plugin::BakkesModPlugin
 	//Boilerplate
 	virtual void onLoad() override;
 	virtual void onUnload() override; // Uncomment and implement if you need a unload method
+
 	void startRecording();
 	void stopRecording();
-	std::unique_ptr<ThreadedFileWriter> fileWriter;
-	std::filesystem::path audio_file_dir;
-
-	bool isRecording;
 	
 	int myMemberCallback(const void *input, 
 		void *output,
@@ -41,6 +38,9 @@ class ReplayComms: public BakkesMod::Plugin::BakkesModPlugin
 		void *userData ) {
 	 return ((ReplayComms*)userData)->myMemberCallback(input, output, frameCount, timeInfo, statusFlags);
 }
+	std::unique_ptr<ThreadedFileWriter> fileWriter;
+	const std::filesystem::path audio_file_dir;
+	bool isRecording;
 public:
 	//void RenderSettings() override; // Uncomment if you wanna render your own tab in the settings menu
 	//void RenderWindow() override; // Uncomment if you want to render your own plugin window

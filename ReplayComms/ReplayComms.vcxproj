@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Release|x64">
@@ -118,8 +118,12 @@
     <ClCompile Include="ReplayComms.cpp" />
     <ClCompile Include="GuiBase.cpp" />
     <ClCompile Include="ThreadedFileWriter.cpp" />
+    <ClCompile Include="ThreadWrapper.cpp" />
+    <ClCompile Include="TwoThreadRingBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CircularSpan.h" />
+    <ClInclude Include="HeapArray.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imguivariouscontrols.h" />
@@ -134,11 +138,15 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="InvariantGuard.h" />
     <ClInclude Include="logging.h" />
+    <ClInclude Include="ModularArithmetic.h" />
+    <ClInclude Include="ModularIndex.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="GuiBase.h" />
     <ClInclude Include="ReplayComms.h" />
     <ClInclude Include="ThreadedFileWriter.hpp" />
+    <ClInclude Include="ThreadWrapper.h" />
     <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
